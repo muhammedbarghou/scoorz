@@ -1,4 +1,5 @@
 import {WebSocket, WebSocketServer} from 'ws';
+import { wsArcjet } from '../arcjet.js';
 
 function sendJson (socket, payload) {
     if (socket.readyState !== WebSocket.OPEN) {
@@ -17,7 +18,23 @@ function broadcast (wss,payload) {
 
 export function createWebSocketServer (server) {
     const wss = new WebSocketServer({ server, path: '/ws', maxPayload: 1024 * 1024 });
-    wss.on('connection', (socket) => {
+    wss.on('connection', async (socket, req) => {
+        if (wsArcjet) {
+            try {
+                const decision = await wsArcjet.protect(req);
+                if (decision.isDenied()) {
+                    const code = decision.reason.isRatelimit() ? 1013 : 1008;
+                    const reason = decision.reason.isRatelimit() ? 'Rate Limit Exceeded' : 'Policy Violation';
+                    socket.close(code, reason);
+                    return;
+                }
+            } catch (err) {
+                console.error('Arcjet WS protection error:', err);
+                socket.close(1011, 'Server Error');
+                return;
+            }
+        }
+
         socket.isAlive = true;
         socket.on('pong', () => {
             socket.isAlive = true;

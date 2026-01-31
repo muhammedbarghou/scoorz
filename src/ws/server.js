@@ -7,7 +7,7 @@ function sendJson (socket, payload) {
     socket.send(JSON.stringify(payload));
 }
 
-function brodcast (wss,payload) {
+function broadcast (wss,payload) {
     for (const client of wss.clients) {
         if (client.readyState !== WebSocket.OPEN) continue;
 
@@ -23,11 +23,11 @@ export function createWebSocketServer (server) {
         socket.on('error', console.error);
     });
 
-    function brodcastMatchCreated (match) {
-        brodcast(wss, {type: 'match_created', data: match});
+    function broadcastMatchCreated (match) {
+        broadcast(wss, {type: 'match_created', data: match});
     }
 
     return {
-        brodcastMatchCreated,
+        broadcastMatchCreated,
     };
 }

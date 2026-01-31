@@ -13,9 +13,9 @@ app.use(express.json());
 
 app.use('/matches', matchRouter);
 
-const { brodcastMatchCreated } =  createWebSocketServer(server);
+const { broadcastMatchCreated } =  createWebSocketServer(server);
 
-app.locals.brodcastMatchCreated = brodcastMatchCreated;
+app.locals.broadcastMatchCreated = broadcastMatchCreated;
 
 server.listen(PORT, HOST, () => {
   const baseUrl = HOST === '0.0.0.0' ? `http://localhost:${PORT}` : `http://${HOST}:${PORT}`;

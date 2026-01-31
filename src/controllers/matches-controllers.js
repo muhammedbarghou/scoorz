@@ -53,8 +53,8 @@ export const createMatch = async (req, res) => {
         
         console.log('Match created successfully:', event);
         
-        if (res.app.locals.brodcastMatchCreated) {
-            res.app.locals.brodcastMatchCreated(event);
+        if (res.app.locals.broadcastMatchCreated) {
+            res.app.locals.broadcastMatchCreated(event);
         }
         
         res.status(201).json({data: event});

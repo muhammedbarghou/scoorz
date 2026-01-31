@@ -23,8 +23,8 @@ export function createWebSocketServer (server) {
             try {
                 const decision = await wsArcjet.protect(req);
                 if (decision.isDenied()) {
-                    const code = decision.reason.isRatelimit() ? 1013 : 1008;
-                    const reason = decision.reason.isRatelimit() ? 'Rate Limit Exceeded' : 'Policy Violation';
+                    const code = decision.reason.isRateLimit() ? 1013 : 1008;
+                    const reason = decision.reason.isRateLimit() ? 'Rate Limit Exceeded' : 'Policy Violation';
                     socket.close(code, reason);
                     return;
                 }
